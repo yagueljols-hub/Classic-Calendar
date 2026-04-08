@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Classic Calendar 2026</title>
+
+<style>
+body {
+    font-family: "Times New Roman", Georgia, serif;
+    background: #fdfbf7;
+    margin: 0;
+    padding: 20px;
+    color: #222;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 25px;
+    letter-spacing: 1px;
+}
+
+/* Year grid */
+.year {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 20px;
+}
+
+/* Month box */
+.month {
+    background: #fff;
+    border: 1px solid #bbb;
+    padding: 10px;
+}
+
+/* Month title */
+.month h2 {
+    text-align: center;
+    font-weight: normal;
+    border-bottom: 1px solid #bbb;
+    padding-bottom: 5px;
+    margin-bottom: 8px;
+}
+
+/* Days header */
+.days, .dates {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+}
+
+.days div {
+    font-weight: bold;
+    padding: 6px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Dates */
+.dates div {
+    min-height: 55px;
+    border: 1px solid #eee;
+    padding-top: 5px;
+    position: relative;
+    font-size: 14px;
+}
+
+/* Weekend shading */
+.dates div:nth-child(7n),
+.dates div:nth-child(7n+1) {
+    background: #fafafa;
+}
+
+/* Holiday style */
+.holiday {
+    background: #fbeaea !important;
+    color: #a10000;
+    font-weight: bold;
+}
+
+/* Holiday label */
+.label {
+    display: block;
+    font-size: 10px;
+    margin-top: 3px;
+    padding: 0 2px;
+}
+
+/* Hover effect */
+.dates div:hover {
+    background: #f0f0f0;
+}
+</style>
+</head>
+
+<body>
+
+<h1>📅 Classic Calendar 2026</h1>
+<div class="year" id="calendar"></div>
+
+<script>
+const year = 2026;
+
+/* Common holidays (editable) */
+const holidays = {
+"1-1": "New Year's Day",
+"2-14": "Valentine's Day",
+"3-8": "Women's Day",
+"4-5": "Easter Sunday",
+"5-1": "Labor Day",
+"6-21": "Father's Day",
+"7-4": "Independence Day",
+"10-31": "Halloween",
+"11-1": "All Saints' Day",
+"12-25": "Christmas Day",
+"12-31": "New Year's Eve"
+};
+
+const months = [
+"January","February","March","April","May","June",
+"July","August","September","October","November","December"
+];
+
+const calendar = document.getElementById("calendar");
+
+months.forEach((month, mIndex) => {
+
+    let firstDay = new Date(year, mIndex, 1).getDay();
+    let daysInMonth = new Date(year, mIndex + 1, 0).getDate();
+
+    let monthDiv = document.createElement("div");
+    monthDiv.className = "month";
+
+    let html = `
+    <h2>${month} ${year}</h2>
+
+    <div class="days">
+        <div>Sun</div><div>Mon</div><div>Tue</div>
+        <div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+    </div>
+
+    <div class="dates">
+    `;
+
+    /* Empty slots before first day */
+    for(let i=0;i<firstDay;i++){
+        html += "<div></div>";
+    }
+
+    /* Dates */
+    for(let d=1; d<=daysInMonth; d++){
+        let key = (mIndex+1) + "-" + d;
+        let holiday = holidays[key];
+
+        html += `
+        <div class="${holiday ? 'holiday' : ''}">
+            ${d}
+            ${holiday ? `<span class="label">${holiday}</span>` : ""}
+        </div>`;
+    }
+
+    html += "</div>";
+    monthDiv.innerHTML = html;
+    calendar.appendChild(monthDiv);
+});
+</script>
+
+</body>
+</html>
